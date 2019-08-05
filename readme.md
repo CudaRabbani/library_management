@@ -1,15 +1,15 @@
-#Library Management Systems
+# Library Management Systems
 
-###Project Descriptions:
+### Project Descriptions:
 I am creating **RESTful API** using **Node.js**. This API will help people for renting books from a private library. For storing data **MongoDB** is used.
-####Library Used:
+#### Library Used:
 -[x] **Express**: for creating Server and routing the api endpoints
 -[x] **Mongoose**: for MongoDB
 -[x] **Lodash**: for array manipulation
 -[x] **Joi**: for input data validation
 -[x] **Joi-objectid** : objectId validation for mMongoDB
 
-##Models
+## Models
 - [x] Book: Contains the Book information such as: Title, Pages, Authors, Category of the Book
 - [x] Author: The information for the author is also stored in the Database. Author name, date of birth, sex, language, country is stored.
 - [x] Category: Each book falls under a category. 
