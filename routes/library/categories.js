@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
 
+const auth = require('../../middleware/auth');
 const {Category, validate} = require('../../models/library/category');
 
 router.get('/', async (req, res) => {
@@ -15,7 +16,13 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
+
+    if (req.user._role === 'customer') {
+        return res.status(403).send('You are not authorized to add category');
+    }
+
+
     const {errors} = validate(req.body);
 
     if (errors) {

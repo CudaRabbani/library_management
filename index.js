@@ -1,6 +1,7 @@
 const express = require('express');
 const app=express();
 const mongoose = require('mongoose');
+const config = require('config');
 
 const books = require('./routes/library/books');
 const categories = require('./routes/library/categories');
@@ -8,6 +9,11 @@ const authors = require('./routes/library/authors');
 const userinfo = require('./routes/users/userInfo');
 const users = require('./routes/users/users');
 const auth = require('./routes/auth');
+
+if (!config.get('jwtPrivateKey')) {
+    console.error('Fatal error, jwt key is not set');
+    process.exit(1);
+}
 
 mongoose.connect('mongodb://localhost/library')
     .then(()=>console.log('Connected to Database'))

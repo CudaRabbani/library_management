@@ -3,6 +3,8 @@ const router = express.Router();
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
 const Joi = require('joi');
+const jwt = require('jsonwebtoken');
+const config = require('config');
 
 const {User} = require('../models/users/user');
 
@@ -37,7 +39,8 @@ router.post('/', async (req, res) => {
         return res.status(400).send(msg);
     }
 
-    res.status(200).send('Login Successful');
+    const token=jwt.sign({_id: user._id, _role: user.role}, config.get('jwtPrivateKey'));
+    return res.header('x-auth-token', token).status(200).send('Login Succesful');
 });
 
 function validate(req) {
