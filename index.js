@@ -7,6 +7,7 @@ const categories = require('./routes/library/categories');
 const authors = require('./routes/library/authors');
 const userinfo = require('./routes/users/userInfo');
 const users = require('./routes/users/users');
+const auth = require('./routes/auth');
 
 mongoose.connect('mongodb://localhost/library')
     .then(()=>console.log('Connected to Database'))
@@ -18,6 +19,7 @@ app.use('/api/category', categories);
 app.use('/api/author', authors);
 app.use('/api/userinfo', userinfo);
 app.use('/api/user', users);
+app.use('/api/login', auth);
 
 const port = process.env.PORT || 4044;
 app.listen(port, ()=>{console.log(`Listenning on ${port}`)});
