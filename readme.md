@@ -3,11 +3,11 @@
 ### Project Descriptions:
 I am creating **RESTful API** using **Node.js**. This API will help people for renting books from a private library. For storing data **MongoDB** is used.
 #### Library Used:
--[x] **Express**: for creating Server and routing the api endpoints
--[x] **Mongoose**: for MongoDB
--[x] **Lodash**: for array manipulation
--[x] **Joi**: for input data validation
--[x] **Joi-objectid** : objectId validation for mMongoDB
+- [x] **Express**: for creating Server and routing the api endpoints
+- [x] **Mongoose**: for MongoDB
+- [x] **Lodash**: for array manipulation
+- [x] **Joi**: for input data validation
+- [x] **Joi-objectid** : objectId validation for mMongoDB
 
 ## Models
 - [x] Book: Contains the Book information such as: Title, Pages, Authors, Category of the Book
