@@ -16,17 +16,20 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.post('/', auth, async (req, res) => {
+router.post('/', async (req, res) => {
 
-    if (req.user._role === 'customer') {
+    /*if (req.user._role === 'customer') {
         return res.status(403).send('You are not authorized to add category');
+    }*/
+
+
+    try {
+        const {errors} = await validate(req.body);
     }
-
-
-    const {errors} = validate(req.body);
-
-    if (errors) {
-        return res.status(400).send(error.details[0].message);
+    catch (err) {
+        let error_msg = `${err.name}: ${err.details[0].message}`;
+        console.log(error_msg);
+        return res.status(400).send(error_msg);
     }
 
     let newCategory = _.pick(req.body, ['name']);

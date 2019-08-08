@@ -18,14 +18,17 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
 
-    const {errors} = validate(req.body);
-
-    if (errors) {
-        console.log(errors.details[0].message);
-        return res.status(400).send(errors.details[0].message);
+    try {
+        const {errors} = validate(req.body);
     }
+    catch (err) {
+        let error_msg = `${err.name}: ${err.details[0].message}`;
+        console.log(error_msg);
+        return res.status(400).send(error_msg);
+    }
+
     let newAuthor = _.pick(req.body, ['name', 'sex', 'dob']);
-    console.log(newAuthor);
+
     newAuthor = new Author(newAuthor);
     try {
         const author = await newAuthor.save();

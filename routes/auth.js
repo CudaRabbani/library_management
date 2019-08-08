@@ -10,11 +10,13 @@ const {User} = require('../models/users/user');
 
 router.post('/', async (req, res) => {
 
-    const {errors} = validate(req.body);
-    if (errors) {
-        const msg = `Login POST: ${errors.details[0].message}`;
-        console.log(msg);
-        return res.status(400).send(msg);
+    try {
+        const {errors} = await validate(req.body);
+    }
+    catch (err) {
+        let error_msg = `${err.name}: ${err.details[0].message}`;
+        console.log(error_msg);
+        return res.status(400).send(error_msg);
     }
     let user= '';
     try {
