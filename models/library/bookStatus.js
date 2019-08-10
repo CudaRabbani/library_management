@@ -35,7 +35,8 @@ function validateBookStatus (bookStatus) {
         book: Joi.objectId(),
         cost: Joi.number().min(0.99).required(),
         qtyInHand: Joi.number().min(0).integer().required(),
-        rent_per_day: Joi.number().min(0.99).required()
+        rent_per_day: Joi.number().min(0.99).required(),
+        added_on: Joi.date()
     };
 
     return Joi.validate(bookStatus, schema);

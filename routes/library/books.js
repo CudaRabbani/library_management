@@ -22,6 +22,21 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/:id', async (req, res) => {
+    try {
+        const bookList = await Book.findById(req.params.id)
+            .populate('category', 'name -_id')
+            .populate('author', 'name -_id')
+            .select('title author category pages abstract');
+        return res.send(bookList);
+    }
+    catch (err) {
+        const msg= `Book: GET(id):/ ${err.message}`;
+        console.log(msg);
+        return res.status(400).send(msg);
+    }
+});
+
 router.post('/', async (req, res) => {
 
     try {
@@ -29,13 +44,8 @@ router.post('/', async (req, res) => {
     }
     catch (err) {
         let error_msg = `${err.name}: ${err.details[0].message}`;
-        console.log(error_msg);
+        console.log('validation error:',error_msg);
         return res.status(400).send(error_msg);
-    }
-
-    if (errors) {
-        console.log(errors.details[0].message);
-        return res.status(400).send(error.details[0].message);
     }
 
     let newBook = _.pick(req.body,
@@ -63,6 +73,47 @@ router.post('/', async (req, res) => {
     }
     catch (err) {
         const msg= `Book: POST:/ ${err.message}`;
+        console.log(msg);
+        return res.status(400).send(msg);
+    }
+});
+
+router.put('/:id', async (req, res) => {
+
+    try {
+        const {errors} = validate(req.body);
+    }
+    catch (err) {
+        let error_msg = `${err.name}: ${err.details[0].message}`;
+        console.log('validation error:',error_msg);
+        return res.status(400).send(error_msg);
+    }
+
+    let newBook = _.pick(req.body, ['title', 'publish_date', 'pages', 'abstract', 'author', 'category']);
+
+    try {
+        const author = await Author.findById(newBook.author);
+        const category = await Category.findById(newBook.category);
+        if (!author || !category) {
+            return res.status(400).send('Invalid Author or Category');
+        }
+        const book = await Book.findByIdAndUpdate(req.params.id, newBook);
+        return res.send(book);
+    }
+    catch(err) {
+        const msg = `Error in Book put: "/" ${err.message}`;
+        console.log(msg);
+        return res.status(400).send(msg);
+    }
+});
+
+router.delete('/:id', async(req, res) => {
+    try {
+        const book = await Book.findByIdAndDelete(req.params.id);
+        return res.send(book);
+    }
+    catch(err) {
+        const msg = `Error in Book Delete: "/" ${err.message}`;
         console.log(msg);
         return res.status(400).send(msg);
     }

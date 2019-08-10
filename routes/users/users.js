@@ -20,6 +20,21 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/:id', async (req, res) => {
+    try {
+        const users = await User
+            .findById(req.params.id)
+            .populate('userinfo', 'fname lname')
+            .select();
+        return res.send(users);
+    }
+    catch (err) {
+        const msg= `User: GET(ID):/ ${err.message}`;
+        console.log(msg);
+        return res.status(400).send(msg);
+    }
+});
+
 router.post('/', async (req, res) => {
 
     const {errors} = validate(req.body);
@@ -57,5 +72,6 @@ router.post('/', async (req, res) => {
         return res.status(400).send(msg);
     }
 });
+
 
 module.exports = router;

@@ -17,10 +17,25 @@ router.get('/', async (req, res) => {
                             .populate('user', 'email -_id')
                             .populate('book', 'title -_id')
                             .select('user book rental_date return_date total_fee');
-        res.send(rental);
+        return res.send(rental);
     }
     catch(err) {
         console.log ('Rental GET error', err.message);
+        return res.status(400).send(err.message);
+    }
+});
+
+router.get('/:id', async (req, res) => {
+    try{
+        const rental = await Rental.findById(req.params.id)
+            .populate('user', 'email -_id')
+            .populate('book', 'title -_id')
+            .select('user book rental_date return_date total_fee');
+        return res.send(rental);
+    }
+    catch(err) {
+        console.log ('Rental GET error', err.message);
+        return res.status(400).send(err.message);
     }
 });
 
@@ -31,10 +46,8 @@ router.post('/', async (req, res) => {
     catch (err) {
         let error_msg = `${err.name}: ${err.details[0].message}`;
         console.log(error_msg);
-        //console.log('validation error', err.message);
         return res.status(400).send(error_msg);
     }
-
 
     let newRental = _.pick(req.body, ['user', 'book', 'rental_date', 'return_date', 'total_fee']);
     try {
@@ -82,6 +95,8 @@ router.post('/', async (req, res) => {
     }
 
 });
+
+
 
 
 module.exports = router;

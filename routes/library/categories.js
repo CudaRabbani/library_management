@@ -16,6 +16,17 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/:id', async (req, res) => {
+    try {
+        const categories = await Category.findById(req.params.id);
+        return res.send(categories);
+    }
+    catch(err) {
+        const msg = `Error in get: "/" ${err.message}`;
+        return res.status(400).send(msg);
+    }
+});
+
 router.post('/', async (req, res) => {
 
     /*if (req.user._role === 'customer') {
@@ -36,6 +47,40 @@ router.post('/', async (req, res) => {
     let category = new Category (newCategory);
     try {
         category = await category.save();
+        return res.send(category);
+    }
+    catch(err) {
+        const msg = `Error in post: "/" ${err.message}`;
+        return res.status(400).send(msg);
+    }
+});
+
+router.put('/:id', async (req, res) => {
+
+    try {
+        const {errors} = await validate(req.body);
+    }
+    catch (err) {
+        let error_msg = `${err.name}: ${err.details[0].message}`;
+        console.log(error_msg);
+        return res.status(400).send(error_msg);
+    }
+
+    let newCategory = _.pick(req.body, ['name']);
+    try {
+        let category = await Category.findByIdAndUpdate(req.params.id, newCategory);
+        return res.send(category);
+    }
+    catch(err) {
+        const msg = `Error in post: "/" ${err.message}`;
+        return res.status(400).send(msg);
+    }
+});
+
+router.delete('/:id', async (req, res) => {
+
+    try {
+        let category = await Category.findByIdAndDelete(req.params.id);
         return res.send(category);
     }
     catch(err) {

@@ -16,6 +16,18 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/:id', async (req, res) => {
+    try {
+        const userinfo = await UserInfo.findById(req.params.id);
+        return res.send(userinfo);
+    }
+    catch(err) {
+        const msg = `UserInfo Error (GET):ID "/" ${err.message}`;
+        console.log(msg);
+        res.status(400).send(msg);
+    }
+});
+
 router.post('/', async (req, res) => {
 
     const {errors} = validate(req.body);
@@ -36,6 +48,43 @@ router.post('/', async (req, res) => {
         const msg = `UserInfo Error (POST): "/" ${err.message}`;
         console.log(msg);
         res.status(400).send(msg);
+    }
+});
+
+router.put('/:id', async (req, res) => {
+
+    try {
+        const {errors} = validate(req.body);
+    }
+    catch (err) {
+        let error_msg = `${err.name}: ${err.details[0].message}`;
+        console.log('Userinfo validation error:',error_msg);
+        return res.status(400).send(error_msg);
+    }
+
+    const newUserInfo = _.pick(req.body, ['fname', 'lname', 'phone', 'sex', 'email',
+        'address', 'city', 'postalCode', 'province', 'country', 'dob']);
+
+    try {
+        let newUser = await UserInfo.findByIdAndUpdate(req.params.id, newUserInfo);
+        return res.send(newUser);
+    }
+    catch(err) {
+        const msg = `UserInfo Error (PUT): "/" ${err.message}`;
+        console.log(msg);
+        res.status(400).send(msg);
+    }
+});
+
+router.delete('/:id', async(req, res) => {
+    try {
+        const userinfo = await UserInfo.findByIdAndDelete(req.params.id);
+        return res.send(userinfo);
+    }
+    catch(err) {
+        const msg = `Error in UserInfo Delete: "/" ${err.message}`;
+        console.log(msg);
+        return res.status(400).send(msg);
     }
 });
 
