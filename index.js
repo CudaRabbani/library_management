@@ -20,7 +20,10 @@ const auth = require('./routes/auth');
 mongoose.connect('mongodb://localhost/library')
     .then(()=>console.log('Connected to Database'))
     .catch((err)=> console.log('Error in Database Connection', err));
-
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:4048');
+    next();
+});
 app.use(express.json());
 app.use('/api/book', books);
 app.use('/api/category', categories);
@@ -30,6 +33,7 @@ app.use('/api/user', users);
 app.use('/api/bookstatus', bookstatus);
 app.use('/api/rentals', rentals);
 app.use('/api/login', auth);
+
 
 const port = process.env.PORT || 4044;
 app.listen(port, ()=>{console.log(`Listenning on ${port}`)});

@@ -8,6 +8,7 @@ const config = require('config');
 
 const {User} = require('../models/users/user');
 
+
 router.post('/', async (req, res) => {
 
     try {
