@@ -43,7 +43,9 @@ router.post('/', async (req, res) => {
     }
 
     const token=jwt.sign({_id: user._id, _role: user.role}, config.get('jwtPrivateKey'));
-    return res.header('x-auth-token', token).status(200).send('Login Succesful');
+    return res.header('x-auth-token', token)
+        .header("access-control-expose-headers", "x-auth-token")
+        .status(200).send('Login Succesful');
 });
 
 function validate(req) {
