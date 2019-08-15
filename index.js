@@ -20,10 +20,20 @@ const auth = require('./routes/auth');
 mongoose.connect('mongodb://localhost/library')
     .then(()=>console.log('Connected to Database'))
     .catch((err)=> console.log('Error in Database Connection', err));
+
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', 'http://localhost:4048');
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,X-Access-Token,XKey,Authorization');
+
+//  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
     next();
 });
+
 app.use(express.json());
 app.use('/api/book', books);
 app.use('/api/category', categories);

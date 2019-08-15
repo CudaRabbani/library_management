@@ -10,9 +10,9 @@ router.get('/', async (req, res) => {
     try {
         const bookList = await Book
             .find()
-            .populate('author', 'name -_id')
-            .populate('category', 'name -_id')
-            .select('title author category pages');
+            .populate('author', 'name _id')
+            .populate('category', 'name _id')
+            .select('title author category pages isActive publish_date');
         return res.send(bookList);
     }
     catch (err) {
@@ -25,9 +25,9 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     try {
         const bookList = await Book.findById(req.params.id)
-            .populate('category', 'name -_id')
-            .populate('author', 'name -_id')
-            .select('title author category pages abstract');
+            .populate('category', 'name _id')
+            .populate('author', 'name _id')
+            .select('title author category pages abstract isActive publish_date');
         return res.send(bookList);
     }
     catch (err) {
@@ -90,6 +90,7 @@ router.put('/:id', async (req, res) => {
     }
 
     let newBook = _.pick(req.body, ['title', 'publish_date', 'pages', 'abstract', 'author', 'category']);
+    console.log(newBook);
 
     try {
         const author = await Author.findById(newBook.author);
