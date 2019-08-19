@@ -4,6 +4,9 @@ const _ = require('lodash');
 
 const {UserInfo, validate} = require('../../models/users/userInfo');
 
+const auth = require('../../middleware/auth');
+const haveAccess = require('../../middleware/haveAccess');
+
 router.get('/', async (req, res) => {
     try {
         const userinfos = await UserInfo.find().sort({'fname': 1});
@@ -16,13 +19,26 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', [auth, haveAccess], async (req, res) => {
     try {
         const userinfo = await UserInfo.findById(req.params.id);
         return res.send(userinfo);
     }
     catch(err) {
         const msg = `UserInfo Error (GET):ID "/" ${err.message}`;
+        console.log(msg);
+        res.status(400).send(msg);
+    }
+});
+
+router.get('/email/:id', async (req, res) => {
+    try {
+        const userinfo = await UserInfo.findOne({email:req.params.id});
+        console.log(userinfo);
+        return res.send(userinfo);
+    }
+    catch(err) {
+        const msg = `UserInfo Error (GET):Email "/" ${err.message}`;
         console.log(msg);
         res.status(400).send(msg);
     }

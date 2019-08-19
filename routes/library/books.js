@@ -6,6 +6,9 @@ const {Book, validate} = require('../../models/library/book');
 const {Author} = require('../../models/library/author');
 const {Category} = require('../../models/library/category');
 
+const auth = require('../../middleware/auth');
+const admin = require('../../middleware/admin');
+
 router.get('/', async (req, res) => {
     try {
         const bookList = await Book
@@ -37,7 +40,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', [auth, admin], async (req, res) => {
 
     try {
         const {errors} = await validate(req.body);
@@ -78,7 +81,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', [auth, admin], async (req, res) => {
 
     try {
         const {errors} = validate(req.body);
@@ -108,7 +111,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-router.delete('/:id', async(req, res) => {
+router.delete('/:id', [auth, admin], async(req, res) => {
     try {
         const book = await Book.findByIdAndDelete(req.params.id);
         return res.send(book);

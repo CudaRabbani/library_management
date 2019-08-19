@@ -32,7 +32,7 @@ const BookStatus = mongoose.model('BookStatus', bookStatusSchema);
 
 function validateBookStatus (bookStatus) {
     const schema = {
-        book: Joi.objectId(),
+        book: Joi.objectId().required(),
         cost: Joi.number().min(0.99).required(),
         qtyInHand: Joi.number().min(0).integer().required(),
         rent_per_day: Joi.number().min(0.99).required(),

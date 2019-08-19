@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const _  = require('lodash');
 
+const auth = require('../../middleware/auth');
+const admin = require('../../middleware/admin');
+
 const {Author, validate} = require('../../models/library/author');
 
 
@@ -27,7 +30,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', [auth, admin], async (req, res) => {
 
     try {
         const {errors} = validate(req.body);
@@ -38,7 +41,7 @@ router.post('/', async (req, res) => {
         return res.status(400).send(error_msg);
     }
 
-    let newAuthor = _.pick(req.body, ['name', 'sex', 'dob']);
+    let newAuthor = _.pick(req.body, ['name', 'sex', 'dob', 'language', 'country']);
 
     newAuthor = new Author(newAuthor);
     try {
@@ -52,7 +55,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', [auth, admin], async (req, res) => {
 
     try {
         const {errors} = validate(req.body);
@@ -76,7 +79,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-router.delete('/:id', async(req, res) => {
+router.delete('/:id',  [auth, admin], async(req, res) => {
     try {
         const author = await Author.findByIdAndDelete(req.params.id);
         return res.send(author);

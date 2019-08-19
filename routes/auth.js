@@ -10,6 +10,7 @@ const {User} = require('../models/users/user');
 
 
 router.post('/', async (req, res) => {
+    console.log('login');
 
     try {
         const {errors} = await validate(req.body);
@@ -31,6 +32,7 @@ router.post('/', async (req, res) => {
     }
 
     try {
+        console.log(req.body.password, user.password);
         const validPassword = await bcrypt.compare(req.body.password, user.password);
         if (!validPassword) {
             return res.status(400).send('Invalid Password/User');
@@ -42,10 +44,10 @@ router.post('/', async (req, res) => {
         return res.status(400).send(msg);
     }
 
-    const token=jwt.sign({_id: user._id, _role: user.role}, config.get('jwtPrivateKey'));
+    const token=jwt.sign({_id: user._id, _role: user.role, _email: user.email, _info: user.userinfo}, config.get('jwtPrivateKey'));
     return res.header('x-auth-token', token)
         .header("access-control-expose-headers", "x-auth-token")
-        .status(200).send('Login Succesful');
+        .status(200).send(token);
 });
 
 function validate(req) {

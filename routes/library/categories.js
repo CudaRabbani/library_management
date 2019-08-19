@@ -3,6 +3,8 @@ const router = express.Router();
 const _ = require('lodash');
 
 const auth = require('../../middleware/auth');
+const admin = require('../../middleware/admin');
+
 const {Category, validate} = require('../../models/library/category');
 
 router.get('/', async (req, res) => {

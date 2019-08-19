@@ -4,6 +4,9 @@ const _ = require('lodash');
 
 const {BookStatus, validate} = require ('../../models/library/bookStatus');
 
+const auth = require('../../middleware/auth');
+const admin = require('../../middleware/admin');
+
 router.get('/', async(req, res) => {
     try {
         const bookStatus = await BookStatus.find()
@@ -54,6 +57,7 @@ router.post('/', async(req, res) => {
 });
 
 router.put('/:id', async(req, res) => {
+    console.log(req.body);
     try {
         const {errors} = await validate(req.body);
     }
@@ -66,7 +70,8 @@ router.put('/:id', async(req, res) => {
     let newBookStatus = _.pick(req.body, ['book', 'cost', 'added_on', 'qtyInHand', 'rent_per_day']);
 
     try {
-        const book = await BookStatus.findByIdAndUpdate(req.params.id,newBookStatus)
+        const book = await BookStatus.findByIdAndUpdate(req.params.id,newBookStatus);
+        console.log('after update', book);
         res.send(book);
     }
     catch(err) {

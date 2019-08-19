@@ -4,12 +4,15 @@ const mongoose = require('mongoose');
 const _ = require('lodash');
 const Fawn = require('fawn');
 
+const auth = require('../../middleware/auth');
+const admin = require('../../middleware/admin');
+
 const {Rental, validate} = require('../../models/rental/rental');
 const {User} = require('../../models/users/user');
 const {Book} = require('../../models/library/book');
 const {BookStatus} = require('../../models/library/bookStatus');
 
-Fawn.init(mongoose);
+//Fawn.init(mongoose);
 
 router.get('/', async (req, res) => {
     try{
@@ -45,7 +48,6 @@ router.post('/', async (req, res) => {
     }
     catch (err) {
         let error_msg = `${err.name}: ${err.details[0].message}`;
-        console.log(error_msg);
         return res.status(400).send(error_msg);
     }
 
