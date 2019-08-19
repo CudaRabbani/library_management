@@ -10,6 +10,7 @@ function auth(req, res, next) {
     try{
         const payLoad = jwt.verify(token, config.get('jwtPrivateKey'));
         req.user = payLoad;
+        console.log('leaving auth');
         next();
     }
     catch(ex) {

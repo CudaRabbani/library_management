@@ -30,11 +30,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.post('/', async (req, res) => {
-
-    /*if (req.user._role === 'customer') {
-        return res.status(403).send('You are not authorized to add category');
-    }*/
+router.post('/', [auth, admin], async (req, res) => {
 
     try {
         const tempCategory = await Category.find({'name': req.body.name});
@@ -68,14 +64,13 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', [auth, admin], async (req, res) => {
 
     try {
         const {errors} = await validate(req.body);
     }
     catch (err) {
         let error_msg = `${err.name}: ${err.details[0].message}`;
-        console.log(error_msg);
         return res.status(400).send(error_msg);
     }
 
@@ -90,7 +85,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', [auth, admin], async (req, res) => {
 
     try {
         let category = await Category.findByIdAndDelete(req.params.id);

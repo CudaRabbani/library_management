@@ -14,7 +14,7 @@ const {BookStatus} = require('../../models/library/bookStatus');
 
 //Fawn.init(mongoose);
 
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
     try{
         const rental = await Rental.find()
                             .populate('user', 'email -_id')
@@ -28,7 +28,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', auth, async (req, res) => {
     try{
         const rental = await Rental.findById(req.params.id)
             .populate('user', 'email -_id')
@@ -42,7 +42,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     try {
         const {errors} = await validate(req.body);
     }

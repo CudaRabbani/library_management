@@ -6,6 +6,7 @@ const {UserInfo, validate} = require('../../models/users/userInfo');
 
 const auth = require('../../middleware/auth');
 const haveAccess = require('../../middleware/haveAccess');
+const admin = require('../../middleware/admin');
 
 router.get('/', async (req, res) => {
     try {
@@ -14,27 +15,24 @@ router.get('/', async (req, res) => {
     }
     catch(err) {
         const msg = `UserInfo Error (GET): "/" ${err.message}`;
-        console.log(msg);
         res.status(400).send(msg);
     }
 });
 
-router.get('/:id', [auth, haveAccess], async (req, res) => {
+router.get('/:id', [auth, admin, haveAccess], async (req, res) => {
     try {
         const userinfo = await UserInfo.findById(req.params.id);
         return res.send(userinfo);
     }
     catch(err) {
         const msg = `UserInfo Error (GET):ID "/" ${err.message}`;
-        console.log(msg);
         res.status(400).send(msg);
     }
 });
 
-router.get('/email/:id', async (req, res) => {
+router.get('/email/:id', [auth, haveAccess], async (req, res) => {
     try {
         const userinfo = await UserInfo.findOne({email:req.params.id});
-        console.log(userinfo);
         return res.send(userinfo);
     }
     catch(err) {
@@ -67,7 +65,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', [auth, haveAccess], async (req, res) => {
 
     try {
         const {errors} = validate(req.body);
@@ -87,19 +85,17 @@ router.put('/:id', async (req, res) => {
     }
     catch(err) {
         const msg = `UserInfo Error (PUT): "/" ${err.message}`;
-        console.log(msg);
         res.status(400).send(msg);
     }
 });
 
-router.delete('/:id', async(req, res) => {
+router.delete('/:id', [auth, admin], async(req, res) => {
     try {
         const userinfo = await UserInfo.findByIdAndDelete(req.params.id);
         return res.send(userinfo);
     }
     catch(err) {
         const msg = `Error in UserInfo Delete: "/" ${err.message}`;
-        console.log(msg);
         return res.status(400).send(msg);
     }
 });

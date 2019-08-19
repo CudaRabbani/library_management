@@ -34,13 +34,12 @@ router.get('/:id', async(req, res) => {
 });
 
 
-router.post('/', async(req, res) => {
+router.post('/', [auth, admin], async(req, res) => {
     try {
         const {errors} = await validate(req.body);
     }
     catch (err) {
         let error_msg = `${err.name}: ${err.details[0].message}`;
-        console.log(error_msg);
         return res.status(400).send(error_msg);
     }
 
@@ -51,19 +50,16 @@ router.post('/', async(req, res) => {
         res.send(newBookStatus);
     }
     catch(err) {
-        console.log('BookStatus: POST ', err.message);
         res.status(400).send(err.message);
     }
 });
 
-router.put('/:id', async(req, res) => {
-    console.log(req.body);
+router.put('/:id', [auth, admin], async(req, res) => {
     try {
         const {errors} = await validate(req.body);
     }
     catch (err) {
         let error_msg = `${err.name}: ${err.details[0].message}`;
-        console.log(error_msg);
         return res.status(400).send(error_msg);
     }
 
@@ -71,23 +67,20 @@ router.put('/:id', async(req, res) => {
 
     try {
         const book = await BookStatus.findByIdAndUpdate(req.params.id,newBookStatus);
-        console.log('after update', book);
         res.send(book);
     }
     catch(err) {
-        console.log('BookStatus: PUT ', err.message);
         res.status(400).send(err.message);
     }
 });
 
-router.delete('/:id', async(req, res) => {
+router.delete('/:id', [auth, admin], async(req, res) => {
     try {
         const bookStatus = await BookStatus.findByIdAndDelete(req.params.id);
         return res.send('Successfully Deleted');
     }
     catch(err) {
         const msg = `Error in Book Status Delete: "/" ${err.message}`;
-        console.log(msg);
         return res.status(400).send(msg);
     }
 });
