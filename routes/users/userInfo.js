@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', [auth, admin, haveAccess], async (req, res) => {
+router.get('/:id', [auth, haveAccess], async (req, res) => {
     try {
         const userinfo = await UserInfo.findById(req.params.id);
         return res.send(userinfo);
@@ -30,7 +30,7 @@ router.get('/:id', [auth, admin, haveAccess], async (req, res) => {
     }
 });
 
-router.get('/email/:id', [auth, haveAccess], async (req, res) => {
+router.get('/email/:id', async (req, res) => {
     try {
         const userinfo = await UserInfo.findOne({email:req.params.id});
         return res.send(userinfo);
@@ -53,40 +53,45 @@ router.post('/', async (req, res) => {
 
     const newUserInfo = _.pick(req.body, ['fname', 'lname', 'phone', 'sex', 'email',
                         'address', 'city', 'postalCode', 'province', 'country', 'dob']);
-    let newUser = new UserInfo(newUserInfo);
+    let newUser = '';
     try {
+        newUser = new UserInfo(newUserInfo);
         newUser = await newUser.save();
-        return res.send(newUser);
     }
     catch(err) {
         const msg = `UserInfo Error (POST): "/" ${err.message}`;
         console.log(msg);
         res.status(400).send(msg);
     }
+    return res.send(newUser);
 });
 
 router.put('/:id', [auth, haveAccess], async (req, res) => {
 
+    console.log(req.body);
+
     try {
-        const {errors} = validate(req.body);
+        const {errors} = await validate(req.body);
     }
     catch (err) {
         let error_msg = `${err.name}: ${err.details[0].message}`;
-        console.log('Userinfo validation error:',error_msg);
         return res.status(400).send(error_msg);
     }
 
-    const newUserInfo = _.pick(req.body, ['fname', 'lname', 'phone', 'sex', 'email',
+    const newUserInfo = _.pick(req.body, ['fname', 'lname', 'phone', 'sex',
         'address', 'city', 'postalCode', 'province', 'country', 'dob']);
 
+    let newUser='';
+
     try {
-        let newUser = await UserInfo.findByIdAndUpdate(req.params.id, newUserInfo);
-        return res.send(newUser);
+        newUser = await UserInfo.updateOne({_id: req.params.id}, newUserInfo, {new: true});
     }
     catch(err) {
         const msg = `UserInfo Error (PUT): "/" ${err.message}`;
         res.status(400).send(msg);
     }
+
+    return res.send(newUser);
 });
 
 router.delete('/:id', [auth, admin], async(req, res) => {

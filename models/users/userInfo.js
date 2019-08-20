@@ -95,7 +95,8 @@ function userInfoValidate(userinfo) {
         postalCode: Joi.string().min(6).max(10).required(),
         province: Joi.string().min(2).max(20).required(),
         country: Joi.string().min(2).max(20).required(),
-        dob: Joi.date()
+        dob: Joi.date(),
+        isActive: Joi.boolean()
     };
 
     return Joi.validate(userinfo, schema);

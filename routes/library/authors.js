@@ -66,7 +66,7 @@ router.put('/:id', [auth, admin], async (req, res) => {
         return res.status(400).send(error_msg);
     }
 
-    let newAuthor = _.pick(req.body, ['name', 'sex', 'dob']);
+    let newAuthor = _.pick(req.body, ['name', 'sex', 'dob', 'language', 'country']);
 
     try {
         const author = await Author.findByIdAndUpdate(req.params.id, newAuthor);

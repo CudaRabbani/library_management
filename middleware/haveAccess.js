@@ -1,5 +1,5 @@
 function haveAccess (req, res, next) {
-    if (req.user._email === req.params.id || req.user._role === 'admin') {
+    if (req.currentUser._info === req.params.id || req.currentUser._email === req.params.id || req.currentUser._role==='admin') {
         next();
     }
     else {

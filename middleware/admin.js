@@ -1,6 +1,6 @@
 
 function admin (req, res, next) {
-    if (req.user._role === "admin") {
+    if (req.currentUser._role === "admin") {
         next();
     }
     else {
